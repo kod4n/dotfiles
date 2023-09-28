@@ -99,10 +99,11 @@ return {
 							map(
 								"n",
 								"<leader>lc",
-								'<cmd>GoCoverage -p -skip "^TestPactConsumer|^TestPactProvider" -coverprofile coverage.out<Cr>',
+								'<cmd>GoCoverage -p -skip "^TestPactConsumer|^TestPactProvider"<Cr>',
 								"Go Test Coverage"
 							)
-							map("n", "<leader>lC", "<cmd>GoCoverage -t -f coverage.out<Cr>", "Go Coverage Toggle")
+							map("n", "<leader>lC", "<cmd>GoCoverage -t<Cr>", "Go Coverage Toggle")
+							map("n", "<leader>ll", "<cmd>GoLint<Cr>", "Go Coverage Toggle")
 							map("n", "<leader>lt", "<cmd>GoTest<Cr>", "Go Test")
 							map("n", "<leader>ltf", "<cmd>GoTestFunc<Cr>", "Go Test Func")
 							map("n", "<leader>lR", "<cmd>GoRun -F<Cr>", "Go Run")
