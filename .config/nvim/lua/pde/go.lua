@@ -96,7 +96,13 @@ return {
 
 						if client.name == "gopls" then
 							map("n", "<leader>ly", "<cmd>GoModTidy<cr>", "Go Mod Tidy")
-							map("n", "<leader>lc", "<cmd>GoCoverage<Cr>", "Go Test Coverage")
+							map(
+								"n",
+								"<leader>lc",
+								'<cmd>GoCoverage -p -skip "^TestPactConsumer|^TestPactProvider" -coverprofile coverage.out<Cr>',
+								"Go Test Coverage"
+							)
+							map("n", "<leader>lC", "<cmd>GoCoverage -t -f coverage.out<Cr>", "Go Coverage Toggle")
 							map("n", "<leader>lt", "<cmd>GoTest<Cr>", "Go Test")
 							map("n", "<leader>ltf", "<cmd>GoTestFunc<Cr>", "Go Test Func")
 							map("n", "<leader>lR", "<cmd>GoRun -F<Cr>", "Go Run")
