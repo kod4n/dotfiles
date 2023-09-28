@@ -68,6 +68,15 @@ return {
 			},
 			setup = {
 				gopls = function(_, _)
+					local format_sync_grp = vim.api.nvim_create_augroup("goimport", {})
+					vim.api.nvim_create_autocmd("bufwritepre", {
+						pattern = "*.go",
+						callback = function()
+							require("go.format").goimport()
+						end,
+						group = format_sync_grp,
+					})
+
 					local lsp_utils = require("base.lsp.utils")
 					lsp_utils.on_attach(function(client, bufnr)
 						local map = function(mode, lhs, rhs, desc)
@@ -86,6 +95,7 @@ return {
 			               map("n", "<leader>ly", "<cmd>GoModTidy<cr>", "Go Mod Tidy")
 			               map("n", "<leader>lc", "<cmd>GoCoverage<Cr>", "Go Test Coverage")
 			               map("n", "<leader>lt", "<cmd>GoTest<Cr>", "Go Test")
+			               map("n", "<leader>ltf", "<cmd>GoTestFunc<Cr>", "Go Test Func")
 			               map("n", "<leader>lR", "<cmd>GoRun<Cr>", "Go Run")
 			               map("n", "<leader>dT", "<cmd>lua require('dap-go').debug_test()<cr>", "Go Debug Test")
 			           end
