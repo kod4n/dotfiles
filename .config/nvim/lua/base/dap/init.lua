@@ -17,12 +17,12 @@ return {
 		-- stylua: ignore
 		keys = {
 			{ "<leader>b", function() require("dap").toggle_breakpoint() end, desc = "Toggle Breakpoint", },
+			{ "<leader>B", function() require("dap").set_breakpoint(vim.fn.input "[Condition] > ") end, desc = "Conditional Breakpoint", },
 			{ "<F5>", function() require("dap").continue() end, desc = "Continue", },
 			{ "<F10>", function() require("dap").step_over() end, desc = "Step Over", },
 			{ "<F11>", function() require("dap").step_into() end, desc = "Step Into", },
 			{ "<F12>", function() require("dap").step_back() end, desc = "Step Back", },
 			-- { "<leader>dR", function() require("dap").run_to_cursor() end, desc = "Run to Cursor", },
-			-- { "<leader>dC", function() require("dap").set_breakpoint(vim.fn.input "[Condition] > ") end, desc = "Conditional Breakpoint", },
 			-- { "<leader>dd", function() require("dap").disconnect() end, desc = "Disconnect", },
 			-- { "<leader>dg", function() require("dap").session() end, desc = "Get Session", },
 			-- { "<leader>dp", function() require("dap").pause.toggle() end, desc = "Pause", },
