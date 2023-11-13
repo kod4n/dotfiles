@@ -16,6 +16,19 @@ return {
 		end,
 	},
 	{
+		"jose-elias-alvarez/null-ls.nvim",
+		opts = function(_, opts)
+			if type(opts.sources) == "table" then
+				local nls = require("null-ls")
+				vim.list_extend(opts.sources, {
+					nls.builtins.diagnostics.eslint,
+					nls.builtins.code_actions.eslint,
+					nls.builtins.formatting.prettier,
+				})
+			end
+		end,
+	},
+	{
 		"pmizio/typescript-tools.nvim",
 		opts = {},
 		config = function(_, opts)
@@ -78,22 +91,7 @@ return {
 				},
 			},
 			setup = {
-				eslint = function()
-					vim.api.nvim_create_autocmd("BufWritePre", {
-						callback = function(event)
-							local client = vim.lsp.get_active_clients({ bufnr = event.buf, name = "eslint" })[1]
-							if client then
-								local diag = vim.diagnostic.get(
-									event.buf,
-									{ namespace = vim.lsp.diagnostic.get_namespace(client.id) }
-								)
-								if #diag > 0 then
-									vim.cmd("EslintFixAll")
-								end
-							end
-						end,
-					})
-				end,
+				eslint = function() end,
 			},
 		},
 	},
