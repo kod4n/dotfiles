@@ -104,8 +104,8 @@ return {
 							)
 							map("n", "<leader>lC", "<cmd>GoCoverage -t<Cr>", "Go Coverage Toggle")
 							map("n", "<leader>ll", "<cmd>GoLint<Cr>", "Go Coverage Toggle")
-							map("n", "<leader>lt", "<cmd>GoTest<Cr>", "Go Test")
-							map("n", "<leader>ltf", "<cmd>GoTestFunc<Cr>", "Go Test Func")
+							map("n", "<leader>lT", "<cmd>GoTestFile<Cr>", "Go Test File")
+							map("n", "<leader>lt", "<cmd>GoTestFunc<Cr>", "Go Test Func")
 							map("n", "<leader>lR", "<cmd>GoRun -F<Cr>", "Go Run")
 							map("n", "<leader>dT", "<cmd>lua require('dap-go').debug_test()<cr>", "Go Debug Test")
 

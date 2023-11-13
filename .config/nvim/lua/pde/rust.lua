@@ -88,9 +88,9 @@ return {
 							local bufnr = event.buf
 
 							-- Register keymappings
-							-- local wk = require "which-key"
-							-- local keys = { mode = { "n", "v" }, ["<leader>lc"] = { name = "+Crates" } }
-							-- wk.register(keys)
+							local wk = require("which-key")
+							local keys = { mode = { "n", "v" }, ["<leader>lc"] = { name = "+Crates" } }
+							wk.register(keys)
 
 							local map = function(mode, lhs, rhs, desc)
 								if desc then
