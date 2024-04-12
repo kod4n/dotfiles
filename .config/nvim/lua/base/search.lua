@@ -47,7 +47,7 @@ return {
 				["<leader>f"] = { name = "+File" },
 				["<leader>q"] = { name = "+Quit/Session" },
 				["<leader>qq"] = { cmd = "<cmd>q<cr>", desc = "Quit" },
-				["<leader>w"] = { cmd = "<cmd>update!<cr>", desc = "Save" },
+				["<leader>w"] = { cmd = "<cmd>w<cr>", desc = "Save" },
 			},
 		},
 		config = function(_, opts)
