@@ -31,6 +31,8 @@ return {
         javascript = { { 'eslint_d, prettierd' } },
         typescript = { { 'eslint_d, prettierd' } },
         terraform = { 'terraform_fmt' },
+        c = { 'clang-format' },
+        cpp = { 'clang-format' },
       },
     },
   },
