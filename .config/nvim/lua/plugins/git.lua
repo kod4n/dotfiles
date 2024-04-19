@@ -1,7 +1,3 @@
--- Adds git related signs to the gutter, as well as utilities for managing changes
--- NOTE: gitsigns is already included in init.lua but contains only the base
--- config. This will add also the recommended keymaps.
-
 return {
   {
     'mbbill/undotree',
@@ -14,8 +10,7 @@ return {
     config = function()
       vim.keymap.set('n', '<leader>gs', vim.cmd.Git)
 
-      local fugitive = vim.api.nvim_create_augroup('fugitive', {})
-
+      local fugitive = vim.api.nvim_create_augroup('kod4n-fugitive', {})
       local autocmd = vim.api.nvim_create_autocmd
       autocmd('BufWinEnter', {
         group = fugitive,

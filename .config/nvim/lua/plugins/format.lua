@@ -28,7 +28,9 @@ return {
       formatters_by_ft = {
         lua = { 'stylua' },
         go = { 'goimports-reviser', 'gofumpt' },
-        javascript = { { 'eslint_d' } },
+        javascript = { { 'eslint_d, prettierd' } },
+        typescript = { { 'eslint_d, prettierd' } },
+        terraform = { 'terraform_fmt' },
       },
     },
   },
