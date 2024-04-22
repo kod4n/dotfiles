@@ -7,6 +7,7 @@ return {
       'nvim-treesitter/nvim-treesitter',
       'marilari88/neotest-vitest',
       'nvim-neotest/neotest-plenary',
+      'nvim-neotest/neotest-go',
     },
     config = function()
       local neotest = require 'neotest'
@@ -14,6 +15,7 @@ return {
         adapters = {
           require 'neotest-vitest',
           require 'neotest-plenary',
+          require 'neotest-go',
         },
       }
 
