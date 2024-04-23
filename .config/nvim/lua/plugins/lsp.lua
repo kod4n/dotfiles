@@ -20,11 +20,6 @@ return {
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
-          -- NOTE: Remember that Lua is a real programming language, and as such it is possible
-          -- to define small helper and utility functions so you don't have to repeat yourself.
-          --
-          -- In this case, we create a function that lets us more easily define mappings specific
-          -- for LSP related items. It sets the mode, buffer and description for us each time.
           local map = function(keys, func, desc)
             vim.keymap.set('n', keys, func, { buffer = event.buf, desc = 'LSP: ' .. desc })
           end
@@ -130,7 +125,16 @@ return {
         'stylua',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-
+      -- local border = {
+      --   { '🭽', 'FloatBorder' },
+      --   { '▔', 'FloatBorder' },
+      --   { '🭾', 'FloatBorder' },
+      --   { '▕', 'FloatBorder' },
+      --   { '🭿', 'FloatBorder' },
+      --   { '▁', 'FloatBorder' },
+      --   { '🭼', 'FloatBorder' },
+      --   { '▏', 'FloatBorder' },
+      -- }
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
@@ -140,6 +144,9 @@ return {
           end,
         },
       }
+
+      vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+      vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
     end,
   },
 }
