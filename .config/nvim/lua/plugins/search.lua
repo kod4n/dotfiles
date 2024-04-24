@@ -106,6 +106,9 @@ return {
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
     opts = {
       ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'go', 'rust' },
       -- Autoinstall languages that are not installed
@@ -118,11 +121,20 @@ return {
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+      textobjects = {
+        select = {
+          enable = true,
+          lookahead = true,
+          keymaps = {
+            ['af'] = '@function.outer',
+            ['if'] = '@function.inner',
+            ['ac'] = '@class.outer',
+            ['ic'] = '@class.inner',
+          },
+        },
+      },
     },
     config = function(_, opts)
-      -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
-
-      -- Prefer git instead of curl in order to improve connectivity in some environments
       require('nvim-treesitter.install').prefer_git = true
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
