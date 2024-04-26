@@ -127,7 +127,7 @@ return {
           lookahead = true,
           keymaps = {
             ['aa'] = '@parameter.outer',
-            ['ia'] = '@parameter.ineer',
+            ['ia'] = '@parameter.inner',
             ['af'] = '@function.outer',
             ['if'] = '@function.inner',
             ['ac'] = '@class.outer',
