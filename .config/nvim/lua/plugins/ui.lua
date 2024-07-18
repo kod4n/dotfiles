@@ -5,7 +5,7 @@ return {
     config = function()
       require('tokyonight').setup {
         style = 'storm',
-        -- transparent = true,
+        transparent = true,
         terminal_colors = true,
         styles = {
           comments = { italic = false },
