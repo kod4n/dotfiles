@@ -8,15 +8,20 @@ return {
       'nvim-treesitter/nvim-treesitter',
       'marilari88/neotest-vitest',
       'nvim-neotest/neotest-plenary',
-      'nvim-neotest/neotest-go',
+      { 'fredrikaverpil/neotest-golang', branch = 'windows' },
     },
     config = function()
       local neotest = require 'neotest'
       neotest.setup {
         adapters = {
-          require 'neotest-vitest',
-          require 'neotest-plenary',
-          require 'neotest-go',
+          require 'neotest-golang' {
+            go_test_args = {
+              '-v',
+              '-race',
+              '-coverprofile=' .. vim.fn.getcwd() .. '/coverage.out',
+            },
+            runner = 'gotestsum',
+          },
         },
       }
 

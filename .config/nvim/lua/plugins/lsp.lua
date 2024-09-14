@@ -90,7 +90,7 @@ return {
           },
         },
         rust_analyzer = {},
-        tsserver = {},
+        ts_ls = {},
         eslint = {
           on_attach = function(_, b)
             vim.api.nvim_create_autocmd('BufWritePre', {
@@ -141,6 +141,16 @@ return {
           function(server_name)
             local server = servers[server_name] or {}
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+
+            for _, v in pairs(server) do
+              if type(v) == 'table' and v.workspace then
+                v.workspace.didChangeWatchedFiles = {
+                  dynamicRegistration = false,
+                  relativePatternSuport = false,
+                }
+              end
+            end
+
             require('lspconfig')[server_name].setup(server)
           end,
         },
