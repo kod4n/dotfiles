@@ -8,11 +8,19 @@ return {
       'nvim-treesitter/nvim-treesitter',
       'marilari88/neotest-vitest',
       'nvim-neotest/neotest-plenary',
-      { 'fredrikaverpil/neotest-golang', branch = 'windows' },
+      {
+        'fredrikaverpil/neotest-golang',
+        dependencies = {
+          'leoluz/nvim-dap-go',
+        },
+      },
     },
     config = function()
       local neotest = require 'neotest'
       neotest.setup {
+        summary = {
+          animated = true,
+        },
         adapters = {
           require 'neotest-golang' {
             go_test_args = {
@@ -20,7 +28,7 @@ return {
               '-race',
               '-coverprofile=' .. vim.fn.getcwd() .. '/coverage.out',
             },
-            runner = 'gotestsum',
+            -- runner = 'gotestsum',
           },
         },
       }
@@ -33,6 +41,9 @@ return {
       end
 
       map('<leader>tc', neotest.run.run, { desc = 'Neo[T]est [C]lose' })
+      map('<leader>td', function()
+        neotest.run.run { suite = false, strategy = 'dap' }
+      end, { desc = 'Neo[T]est [D]ebug' })
       map('<leader>ta', function()
         neotest.run.run(vim.fn.expand '%')
       end, { desc = 'Neo[T]est [A]ll' })
