@@ -33,6 +33,9 @@ return {
     vim.keymap.set('n', '<leader>B', function()
       dap.set_breakpoint(vim.fn.input 'Breakpoint condition: ')
     end, { desc = 'Debug: Set Breakpoint' })
+    vim.keymap.set('n', '<leader>td', function()
+      require('dap-go').debug_test()
+    end, { silent = true, desc = 'Debug Test' })
 
     dapui.setup {
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },

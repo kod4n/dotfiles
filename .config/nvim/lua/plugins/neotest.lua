@@ -6,7 +6,6 @@ return {
       'nvim-lua/plenary.nvim',
       'antoinemadec/FixCursorHold.nvim',
       'nvim-treesitter/nvim-treesitter',
-      'marilari88/neotest-vitest',
       'nvim-neotest/neotest-plenary',
       {
         'fredrikaverpil/neotest-golang',
@@ -26,11 +25,13 @@ return {
             go_test_args = {
               '-v',
               '-race',
+              '-count=1',
               '-coverprofile=' .. vim.fn.getcwd() .. '/coverage.out',
             },
-            -- runner = 'gotestsum',
           },
         },
+        status = { virtual_text = true },
+        output = { open_on_run = true },
       }
 
       ---@param k string
