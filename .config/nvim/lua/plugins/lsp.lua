@@ -73,6 +73,7 @@ return {
 
       local servers = {
         clangd = {},
+        pyright = {},
         gopls = {
           settings = {
             gopls = {
@@ -124,6 +125,7 @@ return {
         'rust_analyzer',
         'gopls',
         'stylua',
+        'pyright',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
       -- local border = {

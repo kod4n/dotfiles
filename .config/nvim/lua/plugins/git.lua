@@ -6,6 +6,20 @@ return {
     end,
   },
   {
+    'ThePrimeagen/git-worktree.nvim',
+    dependencies = {
+      'nvim-telescope/telescope.nvim',
+    },
+    keys = {
+      { '<leader>sr', '<cmd>lua require("telescope").extensions.git_worktree.git_worktrees()<cr>', desc = '[S]earch worktrees' },
+      { '<leader>sR', '<cmd>lua require("telescope").extensions.git_worktree.create_git_worktree()<cr>', desc = 'Create worktree' },
+    },
+    config = function()
+      require('git-worktree').setup {}
+      require('telescope').load_extension 'git_worktree'
+    end,
+  },
+  {
     'NeogitOrg/neogit',
     dependencies = {
       'nvim-lua/plenary.nvim',
@@ -15,9 +29,11 @@ return {
     keys = {
       { '<leader>gs', '<cmd>Neogit<cr>', desc = '[G]it [S]tatus' },
     },
-    config = function()
-      require('neogit').setup {}
-    end,
+    opts = {
+      integrations = {
+        diffview = true,
+      },
+    },
   },
   {
     'lewis6991/gitsigns.nvim',
