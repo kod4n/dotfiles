@@ -14,6 +14,7 @@ return {
     'williamboman/mason.nvim',
     'jay-babu/mason-nvim-dap.nvim',
     'leoluz/nvim-dap-go',
+    'mfussenegger/nvim-dap-python',
   },
   config = function()
     local dap = require 'dap'
@@ -22,7 +23,7 @@ return {
     require('mason-nvim-dap').setup {
       automatic_installation = true,
       handlers = {},
-      ensure_installed = { 'delve', 'codelldb' },
+      ensure_installed = { 'delve', 'codelldb', 'python', 'ruff', 'debugpy' },
     }
 
     vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
@@ -77,5 +78,6 @@ return {
         detached = vim.fn.has 'win32' == 0,
       },
     }
+    require('dap-python').setup()
   end,
 }

@@ -7,6 +7,7 @@ return {
       'antoinemadec/FixCursorHold.nvim',
       'nvim-treesitter/nvim-treesitter',
       'nvim-neotest/neotest-plenary',
+      'nvim-neotest/neotest-python',
       {
         'fredrikaverpil/neotest-golang',
         dependencies = {
@@ -41,6 +42,10 @@ return {
               '-count=1',
               '-coverprofile=' .. vim.fn.getcwd() .. '/coverage.out',
             },
+          },
+          require 'neotest-python' {
+            runner = 'pytest',
+            args = { '-s' },
           },
         },
         status = { virtual_text = true },
