@@ -28,8 +28,8 @@ return {
       formatters_by_ft = {
         lua = { 'stylua' },
         go = { 'goimports', 'goimports-reviser', 'gofumpt' },
-        javascript = { { 'eslint_d, prettierd' } },
-        typescript = { { 'eslint_d, prettierd' } },
+        javascript = { 'eslint_d', 'prettierd', stop_after_first = false },
+        typescript = { 'eslint_d', 'prettierd', stop_after_first = false },
         terraform = { 'terraform_fmt' },
         c = { 'clang-format' },
         cpp = { 'clang-format' },

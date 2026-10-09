@@ -44,6 +44,8 @@ return {
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+          -- Handle document highlight
           if client and client.server_capabilities.documentHighlightProvider then
             vim.api.nvim_create_autocmd({ 'CursorHold', 'CursorHoldI' }, {
               buffer = event.buf,
@@ -56,20 +58,34 @@ return {
             })
           end
 
-          -- The following autocommand is used to enable inlay hints in your
-          -- code, if the language server you are using supports them
-          --
-          -- This may be unwanted, since they displace some of your code
+          -- Handle inlay hints
           if client and client.server_capabilities.inlayHintProvider and vim.lsp.inlay_hint then
             map('<leader>th', function()
-              vim.lsp.inlay_hint.enable(0, not vim.lsp.inlay_hint.is_enabled())
+              vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = event.buf }, { bufnr = event.buf })
             end, '[T]oggle Inlay [H]ints')
+          end
+
+          -- Handle custom on_attach triggers (like eslint autofix)
+          -- Neovim 0.12 merges configurations instead of passing old on_attach callbacks directly
+          if client and client.name == 'eslint' then
+            vim.api.nvim_create_autocmd('BufWritePre', {
+              buffer = event.buf,
+              command = 'EslintFixAll',
+            })
           end
         end,
       })
 
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
+
+      -- Tweak default capabilities to safely handle file watchers
+      capabilities.workspace = vim.tbl_deep_extend('force', capabilities.workspace or {}, {
+        didChangeWatchedFiles = {
+          dynamicRegistration = false,
+          relativePatternSupport = false,
+        },
+      })
 
       local servers = {
         clangd = {},
@@ -92,26 +108,22 @@ return {
         },
         rust_analyzer = {},
         ts_ls = {},
-        eslint = {
-          on_attach = function(_, b)
-            vim.api.nvim_create_autocmd('BufWritePre', {
-              buffer = b,
-              command = 'EslintFixAll',
-            })
-          end,
-        },
-
+        eslint = {},
         lua_ls = {
-          -- cmd = {...},
-          -- filetypes = { ...},
-          -- capabilities = {},
           settings = {
             Lua = {
               completion = {
                 callSnippet = 'Replace',
               },
-              -- You can toggle below to ignore Lua_LS's noisy `missing-fields` warnings
-              -- diagnostics = { disable = { 'missing-fields' } },
+              diagnostics = {
+                -- Get the language server to recognize the `vim` global
+                globals = { 'vim' },
+              },
+              -- workspace = {
+              --   -- Make the server aware of Neovim runtime files
+              --   library = vim.api.nvim_get_runtime_file('', true),
+              --   checkThirdParty = false,
+              -- },
             },
           },
         },
@@ -121,45 +133,16 @@ return {
 
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
-        'lua_ls',
-        'rust_analyzer',
-        'gopls',
         'stylua',
-        'pyright',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
-      -- local border = {
-      --   { '🭽', 'FloatBorder' },
-      --   { '▔', 'FloatBorder' },
-      --   { '🭾', 'FloatBorder' },
-      --   { '▕', 'FloatBorder' },
-      --   { '🭿', 'FloatBorder' },
-      --   { '▁', 'FloatBorder' },
-      --   { '🭼', 'FloatBorder' },
-      --   { '▏', 'FloatBorder' },
-      -- }
-      require('mason-lspconfig').setup {
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+      require('mason-lspconfig').setup { ensure_installed = ensure_installed }
 
-            for _, v in pairs(server) do
-              if type(v) == 'table' and v.workspace then
-                v.workspace.didChangeWatchedFiles = {
-                  dynamicRegistration = false,
-                  relativePatternSuport = false,
-                }
-              end
-            end
-
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
-      }
-
-      -- vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(vim.lsp.handlers.signature_help, { border = 'rounded' })
-      -- vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'rounded' })
+      for server_name, server_opts in pairs(servers) do
+        server_opts.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server_opts.capabilities or {})
+        vim.lsp.config(server_name, server_opts)
+        vim.lsp.enable(server_name)
+      end
     end,
   },
 }
