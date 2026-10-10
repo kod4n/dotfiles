@@ -1,11 +1,4 @@
--- debug.lua
---
--- Shows how to use the DAP plugin to debug your code.
---
--- Primarily focused on configuring the debugger for Go, but can
--- be extended to other languages as well. That's why it's called
--- kickstart.nvim and not kitchen-sink.nvim ;)
-
+---@diagnostic disable: missing-fields
 return {
   'mfussenegger/nvim-dap',
   dependencies = {
@@ -37,6 +30,7 @@ return {
     vim.keymap.set('n', '<leader>td', function()
       require('dap-go').debug_test()
     end, { silent = true, desc = 'Debug Test' })
+    vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })
 
     dapui.setup {
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
@@ -55,27 +49,27 @@ return {
       },
     }
 
-    -- Toggle to see last session result. Without this, you can't see session output in case of unhandled exception.
-    vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })
+    local is_windows = vim.fn.has 'win32' == 1
 
+    dap.listeners.after.event_initialized['dapui_config'] = dapui.open
+    if not is_windows then
+      dap.listeners.after.event_terminated['dapui_config'] = dapui.close
+      dap.listeners.after.event_exited['dapui_config'] = dapui.close
+    end
+
+    local codelldb = vim.fn.exepath 'codelldb'
     dap.adapters.codelldb = {
       type = 'server',
       port = '${port}',
       executable = {
-        command = 'C:\\Users\\andre\\Downloads\\extension\\adapter\\codelldb.exe',
+        command = codelldb,
         args = { '--port', '${port}' },
-        detached = false,
+        detached = is_windows,
       },
     }
-
-    dap.listeners.after.event_initialized['dapui_config'] = dapui.open
-    dap.listeners.before.event_terminated['dapui_config'] = dapui.close
-    dap.listeners.before.event_exited['dapui_config'] = dapui.close
-
-    -- Install golang specific config
     require('dap-go').setup {
       delve = {
-        detached = vim.fn.has 'win32' == 0,
+        detached = is_windows,
       },
     }
     require('dap-python').setup()
