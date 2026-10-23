@@ -17,6 +17,12 @@ return {
     config = function()
       require('telescope').setup {
         pickers = {
+          find_files = {
+            hidden = true,
+            file_ignore_patterns = {
+              '^%.git/',
+            },
+          },
           live_grep = {
             file_ignore_patterns = { 'node_modules', '.git/', '.venv' },
             additional_args = function(_)
@@ -74,10 +80,12 @@ return {
   },
   {
     'nvim-treesitter/nvim-treesitter',
+    branch = 'main',
     build = ':TSUpdate',
     dependencies = {
       {
         'nvim-treesitter/nvim-treesitter-textobjects',
+        branch = 'main',
         config = function()
           require('nvim-treesitter-textobjects').setup {
             select = { lookahead = true },
@@ -98,9 +106,11 @@ return {
         end,
       },
     },
-    main = 'nvim-treesitter.config',
-    opts = {
-      ensure_installed = {
+    config = function()
+      local ts = require 'nvim-treesitter'
+      ts.setup {}
+
+      ts.install {
         'bash',
         'c',
         'cpp',
@@ -117,14 +127,7 @@ return {
         'terraform',
         'vim',
         'vimdoc',
-      },
-      auto_install = true,
-      highlight = { enable = true, additional_vim_regex_highlighting = { 'ruby' } },
-      indent = { enable = true, disable = { 'ruby', 'terraform' } },
-    },
-    config = function(_, opts)
-      require('nvim-treesitter.install').prefer_git = true
-      require('nvim-treesitter.config').setup(opts)
+      }
     end,
   },
 }

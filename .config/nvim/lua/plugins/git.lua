@@ -6,18 +6,12 @@ return {
     end,
   },
   {
-    'ThePrimeagen/git-worktree.nvim',
-    dependencies = {
-      'nvim-telescope/telescope.nvim',
+    'https://plugins.ejri.dev/baredot.nvim',
+    opts = {
+      git_dir = '~/.dotfiles',
+      git_work_tree = '~',
+      disable_pattern = '%.git',
     },
-    keys = {
-      { '<leader>sr', '<cmd>lua require("telescope").extensions.git_worktree.git_worktrees()<cr>', desc = '[S]earch worktrees' },
-      { '<leader>sR', '<cmd>lua require("telescope").extensions.git_worktree.create_git_worktree()<cr>', desc = 'Create worktree' },
-    },
-    config = function()
-      require('git-worktree').setup {}
-      require('telescope').load_extension 'git_worktree'
-    end,
   },
   {
     'NeogitOrg/neogit',
@@ -27,7 +21,22 @@ return {
       'nvim-telescope/telescope.nvim',
     },
     keys = {
-      { '<leader>gs', '<cmd>Neogit<cr>', desc = '[G]it [S]tatus' },
+      {
+        '<leader>gs',
+        function()
+          local config_dir = vim.fn.expand '~/.config'
+          local cwd = vim.fn.getcwd()
+
+          if cwd == config_dir or vim.startswith(cwd, config_dir .. '/') then
+            if vim.env.GIT_DIR ~= vim.fn.expand '~/.dotfiles' then
+              require('baredot').toggle()
+            end
+          end
+
+          require('neogit').open()
+        end,
+        desc = '[G]it [S]tatus',
+      },
     },
     opts = {
       integrations = {
