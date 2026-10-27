@@ -91,18 +91,34 @@ return {
             select = { lookahead = true },
           }
 
-          local function map(lhs, obj)
+          local function select(lhs, obj)
             vim.keymap.set({ 'x', 'o' }, lhs, function()
               require('nvim-treesitter-textobjects.select').select_textobject(obj, 'textobjects')
             end)
           end
 
-          map('aa', '@parameter.outer')
-          map('ia', '@parameter.inner')
-          map('af', '@function.outer')
-          map('if', '@function.inner')
-          map('ac', '@class.outer')
-          map('ic', '@class.inner')
+          local function goto_prev(lhs, obj)
+            vim.keymap.set({ 'n' }, lhs, function()
+              require('nvim-treesitter-textobjects.move').goto_previous_start(obj, 'textobjects')
+            end)
+          end
+
+          local function func_ref(lhs, obj)
+            vim.keymap.set({ 'n' }, lhs, function()
+              require('nvim-treesitter-textobjects.move').goto_previous_start(obj, 'textobjects')
+              vim.lsp.buf.references()
+            end)
+          end
+
+          select('aa', '@parameter.outer')
+          select('ia', '@parameter.inner')
+          select('af', '@function.outer')
+          select('if', '@function.inner')
+          select('ac', '@class.outer')
+          select('ic', '@class.inner')
+
+          goto_prev('<leader>fn', '@function.outer')
+          func_ref('<leader>fr', '@function.outer')
         end,
       },
     },

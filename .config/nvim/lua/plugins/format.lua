@@ -1,5 +1,19 @@
 return {
   'tpope/vim-sleuth',
+  {
+    'nvim-mini/mini.pairs',
+    version = '*',
+    config = function()
+      require('mini.pairs').setup()
+    end,
+  },
+  {
+    'nvim-mini/mini.surround',
+    version = '*',
+    config = function()
+      require('mini.surround').setup()
+    end,
+  },
   { -- Autoformat
     'stevearc/conform.nvim',
     lazy = false,
