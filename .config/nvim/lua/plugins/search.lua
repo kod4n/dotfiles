@@ -15,16 +15,31 @@ return {
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
+      local telescope_config = require 'telescope.config'
+      local vimgrep_arguments = vim.deepcopy(telescope_config.values.vimgrep_arguments)
+      vim.list_extend(vimgrep_arguments, {
+        '--hidden',
+        '--glob',
+        '!**/.git/**',
+      })
+
       require('telescope').setup {
+        defaults = {
+          vimgrep_arguments = vimgrep_arguments,
+        },
         pickers = {
           find_files = {
             hidden = true,
-            file_ignore_patterns = {
-              '^%.git/',
+            find_command = {
+              'rg',
+              '--files',
+              '--hidden',
+              '--glob',
+              '!**/.git/**',
             },
           },
           live_grep = {
-            file_ignore_patterns = { 'node_modules', '.git/', '.venv' },
+            file_ignore_patterns = { 'node_modules', '%.git/', '.venv' },
             additional_args = function(_)
               return { '--hidden' }
             end,
