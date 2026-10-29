@@ -28,9 +28,15 @@ return {
       'hrsh7th/cmp-path',
     },
     config = function()
+      local ui = require 'config.ui'
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
       luasnip.config.setup {}
+
+      -- Consistent borders for Neovim floating windows.
+      vim.o.winborder = 'rounded'
+
+      vim.api.nvim_set_hl(0, 'FloatBorder', ui.float_border)
 
       cmp.setup {
         snippet = {
@@ -40,8 +46,33 @@ return {
         },
         completion = { completeopt = 'menu,menuone,noinsert' },
         window = {
-          completion = cmp.config.window.bordered(),
-          documentation = cmp.config.window.bordered(),
+          border = ui.border,
+          winhighlight = 'Normal:NormalFloat,FloatBorder:FloatBorder,CursorLine:PmenuSel',
+          side_padding = 1,
+          scrollbar = true,
+          completion = {
+            border = ui.border,
+            winhighlight = table.concat({
+              'Normal:NormalFloat',
+              'FloatBorder:FloatBorder',
+              'CursorLine:PmenuSel',
+              'Search:None',
+            }, ','),
+            col_offset = -1,
+            side_padding = 1,
+            scrollbar = true,
+          },
+          documentation = {
+            border = ui.border,
+            winhighlight = table.concat({
+              'Normal:NormalFloat',
+              'FloatBorder:FloatBorder',
+              'CursorLine:Visual',
+              'Search:None',
+            }, ','),
+            max_width = 80,
+            max_height = 20,
+          },
         },
         mapping = cmp.mapping.preset.insert {
           ['<C-n>'] = cmp.mapping.select_next_item(),

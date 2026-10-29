@@ -17,6 +17,11 @@ return {
       { 'folke/neodev.nvim', opts = {} },
     },
     config = function()
+      local ui = require 'config.ui'
+
+      vim.o.winborder = 'rounded'
+      vim.api.nvim_set_hl(0, 'FloatBorder', ui.float_border)
+
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -34,7 +39,13 @@ return {
 
           map('<leader>rn', vim.lsp.buf.rename, '[R]e[n]ame')
           map('<leader>ca', vim.lsp.buf.code_action, '[C]ode [A]ction')
-          map('K', vim.lsp.buf.hover, 'Hover Documentation')
+          map('K', function()
+            vim.lsp.buf.hover {
+              border = ui.border,
+              max_width = 80,
+              max_height = 20,
+            }
+          end, 'Hover Documentation')
           map('<C-Space>', vim.lsp.buf.signature_help, 'Hover Documentation')
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
