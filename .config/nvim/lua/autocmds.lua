@@ -14,9 +14,11 @@ vim.api.nvim_create_autocmd('VimEnter', {
       return
     end
 
-    if vim.fn.isdirectory(buffer_name) == 1 then
-      vim.api.nvim_set_current_dir(buffer_name)
-    elseif buffer_name ~= '' and vim.fn.filereadable(buffer_name) == 1 then
+    local path = vim.fs.normalize(buffer_name)
+
+    if vim.fn.isdirectory(path) == 1 then
+      vim.api.nvim_set_current_dir(path)
+    elseif path ~= '' and vim.fn.filereadable(path) == 1 then
       local initial_dir = vim.fn.expand '%:p:h'
       vim.api.nvim_set_current_dir(initial_dir)
     end
