@@ -19,7 +19,44 @@ return {
       ensure_installed = { 'delve', 'codelldb', 'python', 'ruff', 'debugpy' },
     }
 
-    vim.keymap.set('n', '<F5>', dap.continue, { desc = 'Debug: Start/Continue' })
+    vim.keymap.set('n', '<F5>', function()
+      if dap.session() then
+        dap.continue()
+        return
+      end
+
+      local vscode = require 'dap.ext.vscode'
+      local launch_json = vim.fn.getcwd() .. '/.vscode/launch.json'
+
+      if vim.fn.filereadable(launch_json) == 1 then
+        local configs = vscode.getconfigs(launch_json)
+
+        for _, config in ipairs(configs) do
+          if config.name == 'Debug Game' then
+            local build_script = vim.fn.getcwd() .. '/build.bat'
+            if vim.fn.filereadable(build_script) == 1 then
+              vim.fn.system { 'cmd.exe', '/c', build_script }
+
+              if vim.v.shell_error ~= 0 then
+                vim.notify('Build failed:\n' .. vim.v.shell_error, vim.log.levels.ERROR)
+                return
+              end
+            end
+            dap.run(config)
+            return
+          end
+        end
+
+        -- Fall back to the first project configuration.
+        if #configs > 0 then
+          dap.run(configs[1])
+          return
+        end
+      end
+
+      -- No project configuration: use normal DAP behavior.
+      dap.continue()
+    end, { desc = 'Debug: Start/Continue' })
     vim.keymap.set('n', '<F1>', dap.step_into, { desc = 'Debug: Step Into' })
     vim.keymap.set('n', '<F2>', dap.step_over, { desc = 'Debug: Step Over' })
     vim.keymap.set('n', '<F3>', dap.step_out, { desc = 'Debug: Step Out' })
@@ -31,6 +68,14 @@ return {
       require('dap-go').debug_test()
     end, { silent = true, desc = 'Debug Test' })
     vim.keymap.set('n', '<F7>', dapui.toggle, { desc = 'Debug: See last session result.' })
+    -- Debug: Hover current runtime value
+    vim.keymap.set('n', '<leader>dh', function()
+      dapui.eval()
+    end, { desc = 'Debug: Hover Variable' })
+    -- Debug: Evaluate visually selected expression
+    vim.keymap.set('v', '<leader>dh', function()
+      dapui.eval()
+    end, { desc = 'Debug: Evaluate Selection' })
 
     dapui.setup {
       icons = { expanded = '▾', collapsed = '▸', current_frame = '*' },
