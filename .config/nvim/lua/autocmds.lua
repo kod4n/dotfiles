@@ -8,6 +8,7 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 vim.api.nvim_create_autocmd('VimEnter', {
   desc = 'Set working directory to the file opened on startup',
+  nested = true, -- let DirChanged fire
   callback = function()
     local buffer_name = vim.api.nvim_buf_get_name(0)
     if buffer_name == '' then

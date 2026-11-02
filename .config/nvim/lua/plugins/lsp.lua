@@ -46,6 +46,13 @@ return {
               max_height = 20,
             }
           end, 'Hover Documentation')
+          map('gK', function()
+            require('config.peek_type').peek {
+              border = ui.border,
+              max_width = 100,
+              max_height = 30,
+            }
+          end, 'Peek Type Definition')
           map('<C-Space>', vim.lsp.buf.signature_help, 'Hover Documentation')
           map('gD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
@@ -55,6 +62,15 @@ return {
           --
           -- When you move your cursor, the highlights will be cleared (the second autocommand).
           local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+          -- Show the parameter list automatically while typing inside a call
+          if client then
+            require('config.signature').attach(client, event.buf, {
+              border = ui.border,
+              max_width = 80,
+              max_height = 12,
+            })
+          end
 
           -- Handle document highlight
           if client and client.server_capabilities.documentHighlightProvider then

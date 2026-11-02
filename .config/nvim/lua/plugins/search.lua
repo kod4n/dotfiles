@@ -159,6 +159,17 @@ return {
         'vim',
         'vimdoc',
       }
+
+      local clang_format = require 'config.clang_format'
+      clang_format.setup()
+
+      vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'c', 'cpp' },
+        callback = function(event)
+          vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+          clang_format.apply(event.buf)
+        end,
+      })
     end,
   },
 }
