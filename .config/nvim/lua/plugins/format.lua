@@ -47,6 +47,8 @@ return {
         terraform = { 'terraform_fmt' },
         c = { 'clang-format' },
         cpp = { 'clang-format' },
+        m = { 'clang-format' },
+        mm = { 'clang-format' },
         python = { 'isort', 'black', 'autoflake' },
       },
     },

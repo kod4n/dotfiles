@@ -152,6 +152,7 @@ return {
         'luadoc',
         'markdown',
         'markdown_inline',
+        'objc',
         'python',
         'query',
         'rust',
@@ -170,6 +171,7 @@ return {
           clang_format.apply(event.buf)
         end,
       })
+      vim.treesitter.language.register('objc', { 'objcpp' })
     end,
   },
 }
